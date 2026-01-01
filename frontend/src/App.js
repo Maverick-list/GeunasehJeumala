@@ -447,22 +447,27 @@ const HomePage = () => {
   return (
     <PageWrapper>
       {/* Hero Section */}
-      <section className="min-h-screen relative flex items-center gradient-hero overflow-hidden">
+      <section className="min-h-screen relative flex items-center overflow-hidden bg-[#010d15]">
+        {/* Background image overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#010d15] via-[#012a3a]/90 to-[#013220]/80" />
+        
+        {/* Stars */}
         <div className="absolute inset-0">
-          {[...Array(50)].map((_, i) => (
+          {[...Array(80)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-white/30 rounded-full"
+              className="absolute w-1 h-1 bg-white rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
+                opacity: Math.random() * 0.5 + 0.2,
               }}
               animate={{
-                opacity: [0.3, 1, 0.3],
-                scale: [1, 1.5, 1],
+                opacity: [0.2, 0.8, 0.2],
+                scale: [1, 1.2, 1],
               }}
               transition={{
-                duration: 2 + Math.random() * 2,
+                duration: 2 + Math.random() * 3,
                 repeat: Infinity,
                 delay: Math.random() * 2,
               }}
@@ -470,52 +475,52 @@ const HomePage = () => {
           ))}
         </div>
 
-        <div className="container-custom relative z-10 pt-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="container-custom relative z-10 pt-32 pb-20">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Animated Logo */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="mb-8 flex justify-center"
             >
-              <Badge className="bg-white/20 text-white mb-6 backdrop-blur-sm">
-                Selamat Datang
-              </Badge>
-              <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 font-['Playfair_Display']">
-                {pageData?.heroTitle || "Geunaseh Jeumala"}
+              <AnimatedLogo size="hero" />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4 font-['Playfair_Display'] tracking-wide">
+                GEUNASEH
               </h1>
-              <p className="text-xl text-white/80 mb-8">
-                {pageData?.heroSubtitle || "Bersama Membangun Generasi Berilmu dan Berakhlak"}
+              <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6 font-['Playfair_Display'] tracking-wide">
+                JEUMALA
+              </h2>
+              
+              <p className="text-xl lg:text-2xl text-amber-400 font-medium italic mb-8">
+                Merangkul Langit dengan Kasih Sayang
               </p>
-              <p className="text-white/60 mb-8">
-                {pageData?.heroDescription || "Organisasi mahasiswa yang berdedikasi untuk pengembangan pendidikan, dakwah, dan sosial kemasyarakatan."}
-              </p>
-              <div className="flex flex-wrap gap-4">
+              
+              {/* Description box */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto mb-10 border border-white/10">
+                <p className="text-white/80 leading-relaxed">
+                  {pageData?.heroDescription || "Geunaseh Jeumala adalah organisasi mahasiswa yang berdedikasi untuk pengembangan pendidikan, dakwah, dan sosial kemasyarakatan. Bersama membangun generasi berilmu dan berakhlak mulia."}
+                </p>
+              </div>
+              
+              <div className="flex flex-wrap justify-center gap-4">
                 <Link to="/about">
-                  <Button size="lg" className="bg-white text-emerald-800 hover:bg-white/90">
+                  <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-emerald-500 text-white hover:opacity-90 px-8">
                     Tentang Kami <ArrowRight className="ml-2" size={18} />
                   </Button>
                 </Link>
                 <Link to="/events">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                    Lihat Event
+                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 px-8">
+                    Ikuti Event
                   </Button>
                 </Link>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="hidden lg:flex justify-center"
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-emerald-400 blur-3xl opacity-30 rounded-full" />
-                <img 
-                  src={LOGO_URL} 
-                  alt="Logo" 
-                  className="relative w-80 h-80 object-contain animate-float"
-                />
               </div>
             </motion.div>
           </div>
@@ -523,23 +528,28 @@ const HomePage = () => {
 
         {/* Scroll indicator */}
         <motion.div 
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-center"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center pt-2">
-            <div className="w-1.5 h-3 bg-white/50 rounded-full" />
+          <p className="text-white/50 text-sm mb-2">Scroll Down</p>
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2 mx-auto">
+            <motion.div 
+              className="w-1.5 h-3 bg-white/50 rounded-full"
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            />
           </div>
         </motion.div>
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-24 bg-gradient-to-b from-[#013220] to-[#012a3a]">
         <div className="container-custom">
           <AnimatedSection className="text-center mb-16">
-            <Badge className="mb-4">Program Kami</Badge>
-            <h2 className="text-4xl font-bold mb-4">Program Unggulan</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <Badge className="mb-4 bg-cyan-500/20 text-cyan-400 border-cyan-500/30">Program Kami</Badge>
+            <h2 className="text-4xl font-bold mb-4 text-white">Program Unggulan</h2>
+            <p className="text-white/60 max-w-2xl mx-auto">
               Berbagai program yang kami jalankan untuk membentuk generasi berkualitas
             </p>
           </AnimatedSection>
@@ -547,7 +557,7 @@ const HomePage = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, i) => (
               <AnimatedSection key={i} delay={i * 0.1}>
-                <Card className="card-hover border-0 shadow-lg">
+                <Card className="card-hover border-0 bg-white/5 backdrop-blur-sm border border-white/10">
                   <CardContent className="p-6 text-center">
                     <div className="w-16 h-16 mx-auto mb-4 rounded-2xl gradient-primary flex items-center justify-center">
                       <feature.icon className="text-white" size={28} />
