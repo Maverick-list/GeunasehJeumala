@@ -608,17 +608,23 @@ async def get_members():
     members = await db.members.find({}, {"_id": 0}).to_list(200)
     return members
 
+# Member model for JSON input
+class MemberCreate(BaseModel):
+    name: str
+    position: Optional[str] = ""
+    division: Optional[str] = ""
+
 @api_router.post("/members")
-async def create_member(name: str = Form(...), position: str = Form(""), division: str = Form(""), current_user: dict = Depends(get_current_user)):
-    member = Member(name=name, position=position, division=division)
+async def create_member(member_data: MemberCreate, current_user: dict = Depends(get_current_user)):
+    member = Member(**member_data.model_dump())
     member_dict = member.model_dump()
     await db.members.insert_one(member_dict)
     member_dict.pop("_id", None)
     return member_dict
 
 @api_router.put("/members/{member_id}")
-async def update_member(member_id: str, name: str = Form(...), position: str = Form(""), division: str = Form(""), current_user: dict = Depends(get_current_user)):
-    update_dict = {"name": name, "position": position, "division": division}
+async def update_member(member_id: str, member_data: MemberCreate, current_user: dict = Depends(get_current_user)):
+    update_dict = member_data.model_dump()
     result = await db.members.update_one({"id": member_id}, {"$set": update_dict})
     if result.modified_count == 0:
         raise HTTPException(status_code=404, detail="Member not found")
