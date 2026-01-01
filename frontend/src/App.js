@@ -698,7 +698,8 @@ const HomePage = () => {
 const AboutPage = () => {
   const [members, setMembers] = useState([]);
   const [pageData, setPageData] = useState(null);
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const [scrollX, setScrollX] = useState(0);
+  const scrollContainerRef = React.useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -716,77 +717,27 @@ const AboutPage = () => {
     fetchData();
   }, []);
 
-  const handleMouseMove = useCallback((e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
-      x: (e.clientX - rect.left) / rect.width,
-      y: (e.clientY - rect.top) / rect.height
+  // Handle horizontal scroll for names
+  const handleWheel = useCallback((e) => {
+    e.preventDefault();
+    setScrollX(prev => {
+      const newVal = prev + e.deltaY * 0.5;
+      const maxScroll = Math.max(0, members.length * 120 - window.innerWidth);
+      return Math.max(0, Math.min(newVal, maxScroll));
     });
-  }, []);
+  }, [members.length]);
 
   return (
     <PageWrapper>
-      {/* Galaxy Hero Section */}
+      {/* Hero Section with Scrollable Names */}
       <section 
-        className="min-h-screen relative galaxy-container flex items-center justify-center overflow-hidden pt-20"
-        onMouseMove={handleMouseMove}
+        className="min-h-screen relative bg-gradient-to-b from-[#010d15] via-[#012a3a] to-[#013220] flex flex-col items-center justify-center overflow-hidden pt-20"
+        onWheel={handleWheel}
+        ref={scrollContainerRef}
       >
-        {/* Stars background */}
-        {[...Array(100)].map((_, i) => (
-          <motion.div
-            key={`star-${i}`}
-            className="absolute w-1 h-1 bg-white rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              opacity: Math.random() * 0.8 + 0.2,
-            }}
-            animate={{
-              opacity: [0.2, 1, 0.2],
-            }}
-            transition={{
-              duration: 2 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-
-        {/* Member names as stars */}
-        {members.map((member, i) => {
-          const baseX = 10 + (i % 5) * 18 + Math.random() * 10;
-          const baseY = 15 + Math.floor(i / 5) * 15 + Math.random() * 8;
-          const depth = Math.random() * 0.5 + 0.5;
-          
-          const parallaxX = (mousePos.x - 0.5) * 50 * (1 - depth);
-          const parallaxY = (mousePos.y - 0.5) * 50 * (1 - depth);
-          
-          return (
-            <motion.div
-              key={member.id}
-              className="star-name"
-              style={{
-                left: `${baseX}%`,
-                top: `${baseY}%`,
-                fontSize: `${10 + depth * 8}px`,
-                opacity: 0.4 + depth * 0.6,
-                filter: `blur(${(1 - depth) * 2}px)`,
-              }}
-              animate={{
-                x: parallaxX,
-                y: parallaxY,
-              }}
-              transition={{ type: "spring", stiffness: 100, damping: 20 }}
-              whileHover={{ scale: 1.3, opacity: 1, filter: "blur(0px)" }}
-            >
-              {member.name}
-            </motion.div>
-          );
-        })}
-
         {/* Central text */}
         <motion.div 
-          className="relative z-10 text-center"
+          className="relative z-10 text-center mb-12"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1 }}
@@ -809,9 +760,50 @@ const AboutPage = () => {
             "Kasih Sayang Langit"
           </p>
           <p className="text-white/60 mt-4 text-sm">
-            Gerakkan mouse untuk menjelajahi anggota kami
+            Scroll untuk melihat semua anggota kami →
           </p>
         </motion.div>
+
+        {/* Scrollable Names Container */}
+        <div className="w-full overflow-hidden py-12">
+          <motion.div 
+            className="flex gap-8 px-8"
+            animate={{ x: -scrollX }}
+            transition={{ type: "spring", stiffness: 100, damping: 30 }}
+          >
+            {members.map((member, i) => (
+              <motion.div
+                key={member.id}
+                className="flex-shrink-0 text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.03 }}
+                whileHover={{ scale: 1.1 }}
+              >
+                <span 
+                  className="text-white whitespace-nowrap px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm inline-block"
+                  style={{
+                    textShadow: "0 0 10px rgba(0,191,255,0.6), 0 0 20px rgba(0,191,255,0.3)",
+                  }}
+                >
+                  {member.name}
+                </span>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-4 text-white/40">
+          <span>◀ Scroll</span>
+          <div className="w-20 h-1 bg-white/20 rounded-full overflow-hidden">
+            <motion.div 
+              className="h-full bg-cyan-400 rounded-full"
+              style={{ width: `${Math.min(100, (scrollX / (members.length * 60)) * 100)}%` }}
+            />
+          </div>
+          <span>Scroll ▶</span>
+        </div>
       </section>
 
       {/* About Content */}
