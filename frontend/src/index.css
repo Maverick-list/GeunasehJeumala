@@ -516,7 +516,9 @@ input:focus, textarea:focus, select:focus, button:focus {
 div[style*="Made with"],
 a[href*="emergent"],
 [class*="watermark"],
-[id*="watermark"] {
+[id*="watermark"],
+div:has(> span:contains("Emergent")),
+div:has(> a[href*="emergent"]) {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
@@ -525,4 +527,15 @@ a[href*="emergent"],
     width: 0 !important;
     height: 0 !important;
     overflow: hidden !important;
+}
+
+/* Target fixed position watermarks at bottom */
+body > div[style*="fixed"][style*="bottom"],
+body > div[style*="position: fixed"] {
+    display: none !important;
+}
+
+/* More specific selector for Emergent badge */
+div[style*="z-index"][style*="fixed"]:not(.custom-cursor):not(.cursor-dot) {
+    display: none !important;
 }
