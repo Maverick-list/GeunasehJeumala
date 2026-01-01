@@ -1533,6 +1533,7 @@ const DocumentDetailPage = () => {
 // Admin Layout
 const AdminLayout = ({ children }) => {
   const { user, logout } = useAuth();
+  const { logoUrl } = useLogo() || { logoUrl: DEFAULT_LOGO };
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -1643,6 +1644,7 @@ const AdminLayout = ({ children }) => {
 // Admin Sign In
 const AdminSignIn = () => {
   const { login, user } = useAuth();
+  const { logoUrl } = useLogo() || { logoUrl: DEFAULT_LOGO };
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: "", password: "", secretCode: "" });
   const [error, setError] = useState("");
