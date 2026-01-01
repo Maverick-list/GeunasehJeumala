@@ -2334,12 +2334,12 @@ const AdminTasks = () => {
 
       {/* Filters */}
       <div className="flex gap-4 mb-6">
-        <Select value={filter.status} onValueChange={v => setFilter({...filter, status: v})}>
+        <Select value={filter.status || "all"} onValueChange={v => setFilter({...filter, status: v === "all" ? "" : v})}>
           <SelectTrigger className="w-40">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Semua Status</SelectItem>
+            <SelectItem value="all">Semua Status</SelectItem>
             <SelectItem value="pending">Pending</SelectItem>
             <SelectItem value="in_progress">In Progress</SelectItem>
             <SelectItem value="done">Done</SelectItem>
