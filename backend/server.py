@@ -417,6 +417,7 @@ async def create_media(media_data: MediaCreate, current_user: dict = Depends(get
     media_dict = media_obj.model_dump()
     media_dict["createdAt"] = media_dict["createdAt"].isoformat()
     await db.media.insert_one(media_dict)
+    media_dict.pop("_id", None)
     return media_dict
 
 @api_router.delete("/media/{media_id}")
