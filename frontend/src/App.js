@@ -25,7 +25,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
-const LOGO_URL = "https://customer-assets.emergentagent.com/job_13832b27-906b-4dfc-9ff8-e595f672e269/artifacts/xienulzh_logo.png";
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_13832b27-906b-4dfc-9ff8-e595f672e269/artifacts/4fuy2199_logo-removebg-preview.png";
 
 // Auth Context
 const AuthContext = createContext(null);
