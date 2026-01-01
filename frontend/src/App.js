@@ -344,38 +344,38 @@ const Footer = () => (
             <li><Link to="/" className="hover:text-cyan-400 transition-colors">Beranda</Link></li>
             <li><Link to="/about" className="hover:text-cyan-400 transition-colors">Tentang</Link></li>
             <li><Link to="/events" className="hover:text-cyan-400 transition-colors">Event</Link></li>
-            <li><Link to="/articles" className="hover:text-white transition-colors">Artikel</Link></li>
+            <li><Link to="/articles" className="hover:text-cyan-400 transition-colors">Artikel</Link></li>
           </ul>
         </div>
         
         <div>
-          <h4 className="font-semibold mb-4">Konten</h4>
-          <ul className="space-y-2 text-sm text-white/70">
-            <li><Link to="/documentation" className="hover:text-white transition-colors">Dokumentasi</Link></li>
-            <li><Link to="/activities" className="hover:text-white transition-colors">Kegiatan</Link></li>
-            <li><Link to="/reports" className="hover:text-white transition-colors">Laporan</Link></li>
-            <li><Link to="/gallery" className="hover:text-white transition-colors">Galeri</Link></li>
+          <h4 className="font-semibold mb-4 text-cyan-400">Konten</h4>
+          <ul className="space-y-2 text-sm text-white/60">
+            <li><Link to="/documentation" className="hover:text-cyan-400 transition-colors">Dokumentasi</Link></li>
+            <li><Link to="/activities" className="hover:text-cyan-400 transition-colors">Kegiatan</Link></li>
+            <li><Link to="/reports" className="hover:text-cyan-400 transition-colors">Laporan</Link></li>
+            <li><Link to="/gallery" className="hover:text-cyan-400 transition-colors">Galeri</Link></li>
           </ul>
         </div>
         
         <div>
-          <h4 className="font-semibold mb-4">Kontak</h4>
-          <ul className="space-y-2 text-sm text-white/70">
+          <h4 className="font-semibold mb-4 text-cyan-400">Kontak</h4>
+          <ul className="space-y-2 text-sm text-white/60">
             <li className="flex items-center gap-2">
-              <Mail size={16} />
+              <Mail size={16} className="text-cyan-400" />
               info@geunasehjeumala.org
             </li>
             <li className="flex items-center gap-2">
-              <Phone size={16} />
+              <Phone size={16} className="text-cyan-400" />
               +62 812 3456 7890
             </li>
           </ul>
         </div>
       </div>
       
-      <Separator className="my-8 bg-white/20" />
+      <Separator className="my-8 bg-white/10" />
       
-      <div className="text-center text-sm text-white/60">
+      <div className="text-center text-sm text-white/40">
         © 2025 Geunaseh Jeumala. All rights reserved.
       </div>
     </div>
