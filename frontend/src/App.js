@@ -1857,7 +1857,7 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
                     />
                   ) : field.type === "select" ? (
                     <Select 
-                      value={formData[field.name] || ""} 
+                      value={formData[field.name] || field.options?.[0]?.value || "default"} 
                       onValueChange={v => setFormData({...formData, [field.name]: v})}
                     >
                       <SelectTrigger>
@@ -1865,7 +1865,7 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
                       </SelectTrigger>
                       <SelectContent>
                         {field.options.map(opt => (
-                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          <SelectItem key={opt.value} value={opt.value || "default"}>{opt.label}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
