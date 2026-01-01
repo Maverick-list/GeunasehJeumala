@@ -556,6 +556,7 @@ async def create_task(task_data: TaskCreate, current_user: dict = Depends(get_cu
     task_dict["createdAt"] = task_dict["createdAt"].isoformat()
     task_dict["updatedAt"] = task_dict["updatedAt"].isoformat()
     await db.tasks.insert_one(task_dict)
+    task_dict.pop("_id", None)
     return task_dict
 
 @api_router.put("/tasks/{task_id}")
