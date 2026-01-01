@@ -385,6 +385,7 @@ async def create_article(article_data: ArticleCreate, current_user: dict = Depen
     article_dict["createdAt"] = article_dict["createdAt"].isoformat()
     article_dict["updatedAt"] = article_dict["updatedAt"].isoformat()
     await db.articles.insert_one(article_dict)
+    article_dict.pop("_id", None)
     return article_dict
 
 @api_router.put("/articles/{article_id}")
