@@ -451,6 +451,9 @@ async def create_document(doc_data: DocumentCreate, current_user: dict = Depends
     doc_dict["createdAt"] = doc_dict["createdAt"].isoformat()
     doc_dict["updatedAt"] = doc_dict["updatedAt"].isoformat()
     await db.documents.insert_one(doc_dict)
+    doc_dict.pop("_id", None)
+    return doc_dict
+    await db.documents.insert_one(doc_dict)
     return doc_dict
 
 @api_router.put("/documents/{doc_id}")
