@@ -699,7 +699,7 @@ const AboutPage = () => {
   const [members, setMembers] = useState([]);
   const [pageData, setPageData] = useState(null);
   const [scrollX, setScrollX] = useState(0);
-  const scrollContainerRef = React.useRef(null);
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
