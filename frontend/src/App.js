@@ -694,11 +694,11 @@ const HomePage = () => {
   );
 };
 
-// About Page with Cinematic Name Animation
+// About Page with Vertical Scrolling Names (Like Video Reference)
 const AboutPage = () => {
   const [members, setMembers] = useState([]);
   const [pageData, setPageData] = useState(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [scrollOffset, setScrollOffset] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -716,124 +716,106 @@ const AboutPage = () => {
     fetchData();
   }, []);
 
-  // Smooth scroll handler
+  // Continuous scroll handler - vertical conveyor belt
   const handleWheel = useCallback((e) => {
     e.preventDefault();
-    setScrollProgress(prev => {
-      const delta = e.deltaY * 0.002;
-      return Math.max(0, Math.min(1, prev + delta));
-    });
+    setScrollOffset(prev => prev + e.deltaY * 0.3);
   }, []);
 
-  // Calculate name position based on scroll
-  const getNameStyle = (index, total) => {
-    const basePosition = index / total;
-    const offset = scrollProgress * 2; // How far we've scrolled
-    let position = basePosition - offset;
-    
-    // Wrap around for infinite loop effect
-    while (position < -0.5) position += 1;
-    while (position > 0.5) position -= 1;
-    
-    // Calculate depth (z-position simulation)
-    const depth = 1 - Math.abs(position) * 2;
-    const clampedDepth = Math.max(0, Math.min(1, depth));
-    
-    // Visual properties based on depth
-    const scale = 0.5 + clampedDepth * 0.8;
-    const opacity = 0.1 + clampedDepth * 0.9;
-    const blur = (1 - clampedDepth) * 4;
-    const brightness = 0.4 + clampedDepth * 0.6;
-    
-    // Position on screen
-    const x = position * 180; // Horizontal spread
-    const y = (1 - clampedDepth) * 30 * (index % 2 === 0 ? 1 : -1); // Slight vertical wave
-    const z = clampedDepth * 100;
-    
-    return {
-      transform: `translate3d(${x}vw, ${y}px, ${z}px) scale(${scale})`,
-      opacity,
-      filter: `blur(${blur}px) brightness(${brightness})`,
-      zIndex: Math.floor(clampedDepth * 100),
-    };
-  };
+  // Auto-scroll effect (optional continuous motion)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setScrollOffset(prev => prev + 0.5);
+    }, 30);
+    return () => clearInterval(interval);
+  }, []);
+
+  const itemHeight = 60; // Height per name item
+  const visibleHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+  const totalHeight = members.length * itemHeight;
 
   return (
     <PageWrapper>
-      {/* Cinematic Hero Section */}
+      {/* Vertical Scrolling Names Section */}
       <section 
-        className="min-h-screen relative bg-[#010810] flex items-center justify-center overflow-hidden"
+        className="min-h-screen relative bg-[#0a0a0a] flex items-center justify-center overflow-hidden"
         onWheel={handleWheel}
-        style={{ perspective: "1000px" }}
       >
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#010d15]/50 to-[#012a3a]" />
-        
-        {/* Central Title */}
-        <motion.div 
-          className="absolute z-20 text-center pointer-events-none"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 2 }}
-        >
+        {/* Left side - Title */}
+        <div className="absolute left-8 lg:left-16 z-20">
+          <AnimatedLogo size="lg" className="mb-6" />
           <motion.h1 
-            className="text-5xl lg:text-7xl font-bold text-white/90 font-['Playfair_Display'] mb-3"
-            animate={{ 
-              textShadow: [
-                "0 0 30px rgba(0,191,255,0.3)",
-                "0 0 60px rgba(0,191,255,0.5)",
-                "0 0 30px rgba(0,191,255,0.3)"
-              ]
-            }}
-            transition={{ duration: 4, repeat: Infinity }}
+            className="text-3xl lg:text-5xl font-bold text-white font-['Playfair_Display'] leading-tight"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
           >
-            Geunaseh Jeumala
+            Geunaseh<br/>Jeumala
           </motion.h1>
-          <p className="text-lg text-cyan-300/60 italic">
+          <p className="text-cyan-400/70 mt-3 text-sm lg:text-base italic">
             "Kasih Sayang Langit"
           </p>
-        </motion.div>
-
-        {/* Floating Names Container */}
-        <div className="absolute inset-0 flex items-center justify-center" style={{ transformStyle: "preserve-3d" }}>
-          {members.map((member, i) => (
-            <motion.div
-              key={member.id}
-              className="absolute whitespace-nowrap"
-              style={getNameStyle(i, members.length)}
-              transition={{ type: "tween", duration: 0.1, ease: "linear" }}
-            >
-              <span 
-                className="text-white text-lg md:text-xl font-medium tracking-wide"
-                style={{
-                  textShadow: "0 0 20px rgba(0,191,255,0.8), 0 0 40px rgba(0,191,255,0.4), 0 0 60px rgba(0,191,255,0.2)",
-                }}
-              >
-                {member.name}
-              </span>
-            </motion.div>
-          ))}
         </div>
 
-        {/* Bottom Scroll Hint */}
-        <motion.div 
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-        >
-          <p className="text-white/40 text-sm mb-3">Scroll untuk menjelajahi</p>
-          <div className="flex items-center gap-3">
-            <span className="text-cyan-400/60">◀</span>
-            <div className="w-32 h-1 bg-white/10 rounded-full overflow-hidden">
-              <motion.div 
-                className="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-full"
-                style={{ width: `${scrollProgress * 100}%` }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              />
+        {/* Right side - Scrolling Names (Vertical Conveyor Belt) */}
+        <div className="absolute right-0 top-0 bottom-0 w-1/2 lg:w-2/3 overflow-hidden">
+          {/* Gradient masks for smooth entry/exit */}
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+          
+          {/* Names container - infinite vertical scroll */}
+          <div className="h-full flex items-center justify-center px-8">
+            <div className="relative h-full w-full flex flex-col items-end justify-center">
+              {members.map((member, i) => {
+                // Calculate position with infinite loop
+                let yPos = (i * itemHeight - scrollOffset) % (totalHeight || 1);
+                if (yPos < -itemHeight) yPos += totalHeight;
+                if (yPos > visibleHeight) yPos -= totalHeight;
+                
+                // Normalize position for center calculation (0 = center of screen)
+                const centerOffset = yPos - visibleHeight / 2;
+                const normalizedDistance = Math.abs(centerOffset) / (visibleHeight / 2);
+                
+                // Visual effects based on distance from center
+                const opacity = Math.max(0.15, 1 - normalizedDistance * 0.85);
+                const scale = Math.max(0.7, 1 - normalizedDistance * 0.3);
+                const blur = Math.min(4, normalizedDistance * 5);
+                
+                return (
+                  <motion.div
+                    key={member.id}
+                    className="absolute right-4 lg:right-12 whitespace-nowrap"
+                    style={{
+                      transform: `translateY(${yPos - visibleHeight / 2}px) scale(${scale})`,
+                      opacity,
+                      filter: `blur(${blur}px)`,
+                    }}
+                    transition={{ type: "tween", duration: 0, ease: "linear" }}
+                  >
+                    <span 
+                      className="text-white text-lg lg:text-2xl font-light tracking-wider"
+                      style={{
+                        textShadow: opacity > 0.7 
+                          ? "0 0 20px rgba(0,191,255,0.5), 0 0 40px rgba(0,191,255,0.2)" 
+                          : "none",
+                      }}
+                    >
+                      {member.name}
+                    </span>
+                  </motion.div>
+                );
+              })}
             </div>
-            <span className="text-cyan-400/60">▶</span>
           </div>
+        </div>
+
+        {/* Scroll hint */}
+        <motion.div 
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 text-white/30 text-xs"
+          animate={{ opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          Scroll untuk menjelajahi ↕
         </motion.div>
       </section>
 
