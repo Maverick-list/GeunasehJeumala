@@ -815,29 +815,29 @@ const AboutPage = () => {
       </section>
 
       {/* About Content */}
-      <section className="py-24">
+      <section className="py-24 bg-gradient-to-b from-[#012a3a] to-[#013220]">
         <div className="container-custom">
           <AnimatedSection className="text-center mb-16">
-            <Badge className="mb-4">Tentang Kami</Badge>
-            <h2 className="text-4xl font-bold mb-6">
+            <Badge className="mb-4 bg-cyan-500/20 text-cyan-400 border-cyan-500/30">Tentang Kami</Badge>
+            <h2 className="text-4xl font-bold mb-6 text-white">
               {pageData?.heroTitle || "Mengenal Lebih Dekat"}
             </h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">
+            <p className="text-white/60 max-w-3xl mx-auto">
               {pageData?.heroDescription || "Geunaseh Jeumala adalah organisasi mahasiswa yang didirikan dengan visi untuk membentuk generasi muda yang berilmu, berakhlak mulia, dan bermanfaat bagi masyarakat."}
             </p>
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 gap-12 mb-16">
             <AnimatedSection>
-              <Card className="h-full border-0 shadow-lg">
+              <Card className="h-full border-0 bg-white/5 backdrop-blur-sm border border-white/10">
                 <CardHeader>
-                  <div className="w-14 h-14 rounded-2xl gradient-primary flex items-center justify-center mb-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-emerald-500 flex items-center justify-center mb-4">
                     <Eye className="text-white" size={24} />
                   </div>
-                  <CardTitle>Visi</CardTitle>
+                  <CardTitle className="text-white">Visi</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
+                  <p className="text-white/60">
                     Menjadi organisasi mahasiswa terdepan dalam pembentukan generasi muda yang berilmu, berakhlak mulia, dan berkontribusi positif bagi bangsa dan agama.
                   </p>
                 </CardContent>
@@ -845,9 +845,9 @@ const AboutPage = () => {
             </AnimatedSection>
 
             <AnimatedSection delay={0.1}>
-              <Card className="h-full border-0 shadow-lg">
+              <Card className="h-full border-0 bg-white/5 backdrop-blur-sm border border-white/10">
                 <CardHeader>
-                  <div className="w-14 h-14 rounded-2xl gradient-primary-reverse flex items-center justify-center mb-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center mb-4">
                     <Target className="text-white" size={24} />
                   </div>
                   <CardTitle>Misi</CardTitle>
