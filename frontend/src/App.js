@@ -1734,6 +1734,7 @@ const AdminSignIn = () => {
 // Admin Sign Up
 const AdminSignUp = () => {
   const { signup, user } = useAuth();
+  const { logoUrl } = useLogo() || { logoUrl: DEFAULT_LOGO };
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: "", password: "", secretCode: "", fullName: "" });
   const [error, setError] = useState("");
