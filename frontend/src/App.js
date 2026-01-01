@@ -648,8 +648,8 @@ const HomePage = () => {
                           <Badge key={j} className="text-xs bg-white/10 text-white/80">{tag}</Badge>
                         ))}
                       </div>
-                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">{article.title}</h3>
-                      <p className="text-gray-600 text-sm line-clamp-2">{article.summary}</p>
+                      <h3 className="font-semibold text-lg mb-2 line-clamp-2 text-white">{article.title}</h3>
+                      <p className="text-white/60 text-sm line-clamp-2">{article.summary}</p>
                     </CardContent>
                   </Card>
                 </Link>
@@ -660,20 +660,33 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 gradient-primary">
-        <div className="container-custom text-center">
+      <section className="py-24 bg-[#010d15] relative overflow-hidden">
+        {/* Background glow */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 rounded-full blur-3xl" />
+        </div>
+        
+        <div className="container-custom text-center relative z-10">
           <AnimatedSection>
+            <AnimatedLogo size="lg" className="mx-auto mb-8" />
             <h2 className="text-4xl font-bold text-white mb-6">
               Bergabunglah Bersama Kami
             </h2>
-            <p className="text-white/80 mb-8 max-w-2xl mx-auto">
+            <p className="text-white/60 mb-8 max-w-2xl mx-auto leading-relaxed">
               Mari bersama-sama membangun generasi yang berilmu dan berakhlak mulia untuk masa depan yang lebih baik.
             </p>
-            <Link to="/events">
-              <Button size="lg" className="bg-white text-emerald-800 hover:bg-white/90">
-                Ikuti Event Kami
-              </Button>
-            </Link>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link to="/events">
+                <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-emerald-500 text-white hover:opacity-90 px-8">
+                  Ikuti Event Kami <ArrowRight className="ml-2" size={18} />
+                </Button>
+              </Link>
+              <Link to="/about">
+                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 px-8">
+                  Pelajari Lebih Lanjut
+                </Button>
+              </Link>
+            </div>
           </AnimatedSection>
         </div>
       </section>
