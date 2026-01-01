@@ -51,7 +51,7 @@
             /* Hide Emergent watermark - aggressive */
             body > a[href*="emergent"],
             body > a[style*="fixed"],
-            body > div:not(#root),
+            body > a:not([class]),
             a[href*="emergent.sh"],
             [style*="Made with"] {
                 display: none !important;
@@ -72,6 +72,23 @@
                 opacity: 1 !important;
             }
         </style>
+        <script>
+            // Hide Emergent watermark when it appears
+            function hideWatermark() {
+                document.querySelectorAll('a[href*="emergent"]').forEach(el => {
+                    el.style.cssText = 'display:none!important;visibility:hidden!important;opacity:0!important;position:absolute!important;left:-9999px!important;';
+                });
+            }
+            // Run on load and periodically
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', hideWatermark);
+            } else {
+                hideWatermark();
+            }
+            setInterval(hideWatermark, 500);
+            // Observer for dynamic elements
+            new MutationObserver(hideWatermark).observe(document.body, {childList: true, subtree: true});
+        </script>
         <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
