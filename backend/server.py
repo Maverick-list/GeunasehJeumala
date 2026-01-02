@@ -332,6 +332,20 @@ async def login(user_data: UserLogin):
 async def get_me(current_user: dict = Depends(get_current_user)):
     return current_user
 
+@api_router.put("/auth/profile")
+async def update_profile(profile_data: ProfileUpdate, current_user: dict = Depends(get_current_user)):
+    update_dict = {}
+    if profile_data.fullName is not None:
+        update_dict["fullName"] = profile_data.fullName
+    if profile_data.profilePhoto is not None:
+        update_dict["profilePhoto"] = profile_data.profilePhoto
+    
+    if update_dict:
+        await db.users.update_one({"id": current_user["id"]}, {"$set": update_dict})
+    
+    updated_user = await db.users.find_one({"id": current_user["id"]}, {"_id": 0, "password": 0})
+    return updated_user
+
 # ==================== PAGE CONTENT ROUTES ====================
 
 @api_router.get("/pages")
