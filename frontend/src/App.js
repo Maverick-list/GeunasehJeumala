@@ -970,9 +970,17 @@ const AboutPage = () => {
               <AnimatedSection key={member.id} delay={i * 0.05}>
                 <Card className="card-hover border-0 bg-white/5 backdrop-blur-sm border border-white/10">
                   <CardContent className="p-4 text-center">
-                    <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-br from-cyan-500 to-emerald-500 flex items-center justify-center text-white text-xl font-bold">
-                      {member.name.charAt(0)}
-                    </div>
+                    {member.photo ? (
+                      <img 
+                        src={member.photo} 
+                        alt={member.name}
+                        className="w-16 h-16 mx-auto mb-3 rounded-full object-cover border-2 border-cyan-500/30"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-br from-cyan-500 to-emerald-500 flex items-center justify-center text-white text-xl font-bold">
+                        {member.name?.charAt(0) || "?"}
+                      </div>
+                    )}
                     <h4 className="font-medium text-sm mb-1 text-white">{member.name}</h4>
                     <p className="text-xs text-white/60">{member.position}</p>
                     <Badge className="text-xs mt-2 bg-white/10 text-white/80">{member.division}</Badge>
