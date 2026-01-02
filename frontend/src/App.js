@@ -2696,7 +2696,7 @@ const AdminPages = () => {
       const res = await axios.get(`${API}/pages/${pageId}`);
       setFormData(res.data);
     } catch (e) {
-      setFormData({ pageId, heroTitle: "", heroSubtitle: "", heroDescription: "", heroImage: "", sections: [] });
+      setFormData({ pageId, heroTitle: "", heroSubtitle: "", heroTagline: "", heroDescription: "", heroImage: "", sections: [] });
     }
   };
 
@@ -2704,9 +2704,9 @@ const AdminPages = () => {
     setSaving(true);
     try {
       await axios.post(`${API}/pages`, { ...formData, pageId: selectedPage }, { headers });
-      alert("Berhasil disimpan!");
+      toast?.addToast("Berhasil disimpan!", "success");
     } catch (e) {
-      alert("Gagal menyimpan");
+      toast?.addToast("Gagal menyimpan", "error");
     }
     setSaving(false);
   };
@@ -2735,6 +2735,7 @@ const AdminPages = () => {
               <Input 
                 value={formData.heroTitle || ""} 
                 onChange={e => setFormData({...formData, heroTitle: e.target.value})}
+                placeholder="Contoh: GEUNASEH"
               />
             </div>
             <div>
@@ -2742,6 +2743,15 @@ const AdminPages = () => {
               <Input 
                 value={formData.heroSubtitle || ""} 
                 onChange={e => setFormData({...formData, heroSubtitle: e.target.value})}
+                placeholder="Contoh: JEUMALA"
+              />
+            </div>
+            <div>
+              <Label>Hero Tagline</Label>
+              <Input 
+                value={formData.heroTagline || ""} 
+                onChange={e => setFormData({...formData, heroTagline: e.target.value})}
+                placeholder="Contoh: Merangkul Langit dengan Kasih Sayang"
               />
             </div>
             <div>
