@@ -66,7 +66,12 @@ class User(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     username: str
     fullName: Optional[str] = ""
+    profilePhoto: Optional[str] = ""
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class ProfileUpdate(BaseModel):
+    fullName: Optional[str] = None
+    profilePhoto: Optional[str] = None
 
 class TokenResponse(BaseModel):
     access_token: str
