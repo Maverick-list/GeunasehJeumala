@@ -2680,12 +2680,13 @@ const AdminTasks = () => {
 // Admin Pages
 const AdminPages = () => {
   const { token } = useAuth();
+  const toast = useToast();
   const [pages, setPages] = useState([]);
   const [selectedPage, setSelectedPage] = useState("home");
   const [formData, setFormData] = useState({});
   const [saving, setSaving] = useState(false);
 
-  const headers = { Authorization: `Bearer ${token}` };
+  const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 
   useEffect(() => {
     fetchPage(selectedPage);
