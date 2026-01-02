@@ -104,24 +104,32 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(Cookies.get("token") || null);
   const [loading, setLoading] = useState(true);
 
+  const fetchUser = async () => {
+    if (token) {
+      try {
+        const res = await axios.get(`${API}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setUser(res.data);
+      } catch {
+        Cookies.remove("token");
+        setToken(null);
+        setUser(null);
+      }
+    }
+  };
+
   useEffect(() => {
     const checkAuth = async () => {
-      if (token) {
-        try {
-          const res = await axios.get(`${API}/auth/me`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          setUser(res.data);
-        } catch {
-          Cookies.remove("token");
-          setToken(null);
-          setUser(null);
-        }
-      }
+      await fetchUser();
       setLoading(false);
     };
     checkAuth();
   }, [token]);
+
+  const refreshUser = async () => {
+    await fetchUser();
+  };
 
   const login = async (username, password, secretCode) => {
     const res = await axios.post(`${API}/auth/login`, { username, password, secretCode });
@@ -146,7 +154,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, signup, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, login, signup, logout, loading, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
