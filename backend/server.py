@@ -83,6 +83,7 @@ class PageContentCreate(BaseModel):
     pageId: str
     heroTitle: Optional[str] = ""
     heroSubtitle: Optional[str] = ""
+    heroTagline: Optional[str] = ""
     heroDescription: Optional[str] = ""
     heroImage: Optional[str] = ""
     sections: Optional[List[dict]] = []
@@ -93,6 +94,7 @@ class PageContent(BaseModel):
     pageId: str
     heroTitle: Optional[str] = ""
     heroSubtitle: Optional[str] = ""
+    heroTagline: Optional[str] = ""
     heroDescription: Optional[str] = ""
     heroImage: Optional[str] = ""
     sections: Optional[List[dict]] = []
