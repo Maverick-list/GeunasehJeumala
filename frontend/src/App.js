@@ -2747,17 +2747,27 @@ const AdminMembers = () => (
 
 // Admin Settings - Logo Edit
 const AdminSettings = () => {
-  const { token } = useAuth();
+  const { token, user, refreshUser } = useAuth();
   const toast = useToast();
   const { logoUrl, updateLogo, DEFAULT_LOGO } = useLogo() || {};
   const [newLogoUrl, setNewLogoUrl] = useState("");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef(null);
+  
+  // Profile photo state
+  const [profilePhoto, setProfilePhoto] = useState("");
+  const [uploadingProfile, setUploadingProfile] = useState(false);
+  const [savingProfile, setSavingProfile] = useState(false);
+  const profileInputRef = useRef(null);
 
   useEffect(() => {
     if (logoUrl) setNewLogoUrl(logoUrl);
   }, [logoUrl]);
+
+  useEffect(() => {
+    if (user?.profilePhoto) setProfilePhoto(user.profilePhoto);
+  }, [user]);
 
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -2797,61 +2807,172 @@ const AdminSettings = () => {
     setNewLogoUrl(DEFAULT_LOGO);
   };
 
+  // Profile photo handlers
+  const handleProfileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    setUploadingProfile(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await axios.post(`${API}/upload`, formData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const uploadedUrl = `${BACKEND_URL}${res.data.url}`;
+      setProfilePhoto(uploadedUrl);
+      toast?.addToast("Foto profil berhasil diupload!", "success");
+    } catch (e) {
+      toast?.addToast("Gagal upload foto profil", "error");
+    }
+    setUploadingProfile(false);
+  };
+
+  const handleSaveProfile = async () => {
+    setSavingProfile(true);
+    try {
+      await axios.put(`${API}/auth/profile`, { profilePhoto }, {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
+      });
+      refreshUser?.();
+      toast?.addToast("Foto profil berhasil disimpan!", "success");
+    } catch (e) {
+      toast?.addToast("Gagal menyimpan foto profil", "error");
+    }
+    setSavingProfile(false);
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Pengaturan Website</h1>
       
-      <Card className="border-0 shadow-lg max-w-2xl">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ImageIcon size={20} />
-            Logo Website
-          </CardTitle>
-          <CardDescription>Upload atau ubah logo website organisasi</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Preview */}
-          <div className="flex justify-center">
-            <div className="w-40 h-40 rounded-full bg-gradient-to-br from-[#012a3a] to-[#013220] p-2 flex items-center justify-center">
-              <img 
-                src={newLogoUrl || DEFAULT_LOGO} 
-                alt="Logo Preview" 
-                className="w-full h-full object-contain rounded-full"
+      <div className="grid gap-6 max-w-2xl">
+        {/* Profile Photo Card */}
+        <Card className="border-0 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users size={20} />
+              Foto Profil Admin
+            </CardTitle>
+            <CardDescription>Upload atau ubah foto profil Anda</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Preview */}
+            <div className="flex justify-center">
+              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#012a3a] to-[#013220] p-1 flex items-center justify-center">
+                {profilePhoto ? (
+                  <img 
+                    src={profilePhoto} 
+                    alt="Profile Preview" 
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-full bg-white/20 flex items-center justify-center text-white text-3xl font-bold">
+                    {user?.username?.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Upload */}
+            <div>
+              <Label>Upload Foto Profil Baru</Label>
+              <div className="flex gap-2 mt-2">
+                <input 
+                  type="file" 
+                  ref={profileInputRef}
+                  onChange={handleProfileUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => profileInputRef.current?.click()}
+                  disabled={uploadingProfile}
+                  className="flex-1"
+                >
+                  <Upload size={16} className="mr-2" />
+                  {uploadingProfile ? "Mengupload..." : "Pilih Foto"}
+                </Button>
+              </div>
+            </div>
+
+            {/* URL Input */}
+            <div>
+              <Label>Atau Masukkan URL Foto</Label>
+              <Input 
+                value={profilePhoto}
+                onChange={e => setProfilePhoto(e.target.value)}
+                placeholder="https://example.com/photo.jpg"
+                className="mt-2"
               />
             </div>
-          </div>
 
-          {/* Upload */}
-          <div>
-            <Label>Upload Logo Baru</Label>
-            <div className="flex gap-2 mt-2">
-              <input 
-                type="file" 
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-                accept="image/*"
-                className="hidden"
-              />
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                className="flex-1"
-              >
-                <Upload size={16} className="mr-2" />
-                {uploading ? "Mengupload..." : "Pilih File"}
+            {/* Actions */}
+            <div className="flex gap-2">
+              <Button onClick={handleSaveProfile} className="gradient-primary flex-1" disabled={savingProfile}>
+                {savingProfile ? "Menyimpan..." : "Simpan Foto Profil"}
+              </Button>
+              <Button type="button" variant="outline" onClick={() => setProfilePhoto("")}>
+                Hapus Foto
               </Button>
             </div>
-          </div>
+          </CardContent>
+        </Card>
 
-          {/* URL Input */}
-          <div>
-            <Label>Atau Masukkan URL Logo</Label>
-            <Input 
-              value={newLogoUrl}
-              onChange={e => setNewLogoUrl(e.target.value)}
-              placeholder="https://example.com/logo.png"
+        {/* Logo Card */}
+        <Card className="border-0 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ImageIcon size={20} />
+              Logo Website
+            </CardTitle>
+            <CardDescription>Upload atau ubah logo website organisasi</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Preview */}
+            <div className="flex justify-center">
+              <div className="w-40 h-40 rounded-full bg-gradient-to-br from-[#012a3a] to-[#013220] p-2 flex items-center justify-center">
+                <img 
+                  src={newLogoUrl || DEFAULT_LOGO} 
+                  alt="Logo Preview" 
+                  className="w-full h-full object-contain rounded-full"
+                />
+              </div>
+            </div>
+
+            {/* Upload */}
+            <div>
+              <Label>Upload Logo Baru</Label>
+              <div className="flex gap-2 mt-2">
+                <input 
+                  type="file" 
+                  ref={fileInputRef}
+                  onChange={handleFileUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="flex-1"
+                >
+                  <Upload size={16} className="mr-2" />
+                  {uploading ? "Mengupload..." : "Pilih File"}
+                </Button>
+              </div>
+            </div>
+
+            {/* URL Input */}
+            <div>
+              <Label>Atau Masukkan URL Logo</Label>
+              <Input 
+                value={newLogoUrl}
+                onChange={e => setNewLogoUrl(e.target.value)}
+                placeholder="https://example.com/logo.png"
               className="mt-2"
             />
           </div>
