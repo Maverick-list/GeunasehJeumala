@@ -934,6 +934,27 @@ async def seed_data():
     
     return {"success": True, "message": "Data berhasil di-seed"}
 
+# ==================== SETTINGS ROUTES ====================
+
+class LogoSettingUpdate(BaseModel):
+    logoUrl: str
+
+@api_router.get("/settings/logo")
+async def get_logo():
+    setting = await db.settings.find_one({"key": "logo"}, {"_id": 0})
+    if not setting:
+        return {"logoUrl": ""}
+    return {"logoUrl": setting.get("value", "")}
+
+@api_router.post("/settings/logo")
+async def save_logo(data: LogoSettingUpdate, current_user: dict = Depends(get_current_user)):
+    await db.settings.update_one(
+        {"key": "logo"},
+        {"$set": {"key": "logo", "value": data.logoUrl, "updatedAt": datetime.now(timezone.utc).isoformat()}},
+        upsert=True
+    )
+    return {"success": True, "logoUrl": data.logoUrl}
+
 # ==================== ROOT ====================
 
 @api_router.get("/")
