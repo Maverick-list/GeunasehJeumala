@@ -643,6 +643,7 @@ class MemberCreate(BaseModel):
     name: str
     position: Optional[str] = ""
     division: Optional[str] = ""
+    photo: Optional[str] = ""
 
 @api_router.post("/members")
 async def create_member(member_data: MemberCreate, current_user: dict = Depends(get_current_user)):
