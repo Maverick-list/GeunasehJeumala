@@ -29,12 +29,12 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ.get('DB_NAME', 'geunaseh_jeumala')]
 
 # JWT Settings
-SECRET_KEY = os.environ.get('JWT_SECRET', 'geunaseh-jeumala-secret-key-2025')
+SECRET_KEY = os.environ.get('JWT_SECRET', 'default-secret-change-in-production')
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
 
 # Secret code for admin access
-ADMIN_SECRET_CODE = "<Mavecode300107>"
+ADMIN_SECRET_CODE = os.environ.get('ADMIN_SECRET_CODE', 'default-admin-code')
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
