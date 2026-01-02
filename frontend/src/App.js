@@ -2981,24 +2981,24 @@ const AdminSettings = () => {
                 value={newLogoUrl}
                 onChange={e => setNewLogoUrl(e.target.value)}
                 placeholder="https://example.com/logo.png"
-              className="mt-2"
-            />
-          </div>
+                className="mt-2"
+              />
+            </div>
 
-          {/* Actions */}
-          <div className="flex gap-2">
-            <Button onClick={handleSave} className="gradient-primary flex-1" disabled={saving}>
-              {saving ? "Menyimpan..." : "Simpan Logo"}
-            </Button>
-            <Button type="button" variant="outline" onClick={handleReset}>
-              Reset Default
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+            {/* Actions */}
+            <div className="flex gap-2">
+              <Button onClick={handleSave} className="gradient-primary flex-1" disabled={saving}>
+                {saving ? "Menyimpan..." : "Simpan Logo"}
+              </Button>
+              <Button type="button" variant="outline" onClick={handleReset}>
+                Reset Default
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   );
-};
 
 // ==================== MAIN APP ====================
 
