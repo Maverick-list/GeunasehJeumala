@@ -1950,7 +1950,10 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const headers = { Authorization: `Bearer ${token}` };
+  const headers = { 
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json"
+  };
 
   useEffect(() => {
     fetchItems();
@@ -1958,10 +1961,11 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
 
   const fetchItems = async () => {
     try {
-      const res = await axios.get(`${API}/${endpoint}`, { headers });
-      setItems(res.data);
+      const res = await axios.get(`${API}/${endpoint}`);
+      setItems(res.data || []);
     } catch (e) {
       console.error(e);
+      setItems([]);
     }
   };
 
@@ -1976,19 +1980,19 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
         await axios.post(`${API}/${endpoint}`, formData, { headers });
         toast?.addToast("Data berhasil ditambahkan!", "success");
       }
-      fetchItems();
+      await fetchItems();
       setDialogOpen(false);
       setFormData({});
       setEditingId(null);
     } catch (e) {
-      console.error(e);
-      toast?.addToast("Gagal menyimpan data", "error");
+      console.error("Save error:", e.response?.data || e.message);
+      toast?.addToast(e.response?.data?.detail || "Gagal menyimpan data", "error");
     }
     setLoading(false);
   };
 
   const handleEdit = (item) => {
-    setFormData(item);
+    setFormData({...item});
     setEditingId(item.id);
     setDialogOpen(true);
   };
@@ -1998,10 +2002,10 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
     try {
       await axios.delete(`${API}/${endpoint}/${id}`, { headers });
       toast?.addToast("Data berhasil dihapus!", "success");
-      fetchItems();
+      await fetchItems();
     } catch (e) {
-      console.error(e);
-      toast?.addToast("Gagal menghapus data", "error");
+      console.error("Delete error:", e.response?.data || e.message);
+      toast?.addToast(e.response?.data?.detail || "Gagal menghapus data", "error");
     }
   };
 
