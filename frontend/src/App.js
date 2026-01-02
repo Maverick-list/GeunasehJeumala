@@ -2790,12 +2790,17 @@ const AdminMembers = () => (
       { name: "name", label: "Nama", required: true },
       { name: "position", label: "Jabatan" },
       { name: "division", label: "Divisi" },
+      { name: "photo", label: "URL Foto", placeholder: "https://example.com/foto.jpg" },
     ]}
     renderItem={(item) => (
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white font-bold">
-          {item.name.charAt(0)}
-        </div>
+        {item.photo ? (
+          <img src={item.photo} alt={item.name} className="w-10 h-10 rounded-full object-cover" />
+        ) : (
+          <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white font-bold">
+            {item.name?.charAt(0) || "?"}
+          </div>
+        )}
         <div>
           <div className="font-medium">{item.name}</div>
           <div className="text-sm text-gray-500">{item.position} - {item.division}</div>
