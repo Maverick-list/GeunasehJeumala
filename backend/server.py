@@ -233,6 +233,7 @@ class Member(BaseModel):
     name: str
     position: Optional[str] = ""
     division: Optional[str] = ""
+    photo: Optional[str] = ""
 
 # ==================== HELPERS ====================
 
