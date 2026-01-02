@@ -571,14 +571,14 @@ const HomePage = () => {
               transition={{ duration: 0.8, delay: 0.3 }}
             >
               <h1 className="text-5xl lg:text-7xl font-bold text-white mb-4 font-['Playfair_Display'] tracking-wide">
-                GEUNASEH
+                {pageData?.heroTitle || "GEUNASEH"}
               </h1>
               <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6 font-['Playfair_Display'] tracking-wide">
-                JEUMALA
+                {pageData?.heroSubtitle || "JEUMALA"}
               </h2>
               
               <p className="text-xl lg:text-2xl text-amber-400 font-medium italic mb-8">
-                Merangkul Langit dengan Kasih Sayang
+                {pageData?.heroTagline || "Merangkul Langit dengan Kasih Sayang"}
               </p>
               
               {/* Description box */}
