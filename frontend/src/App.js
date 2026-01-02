@@ -2997,6 +2997,7 @@ const AdminSettings = () => {
           </CardContent>
         </Card>
       </div>
+    </div>
     );
 };
 
