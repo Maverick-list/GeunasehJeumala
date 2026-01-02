@@ -1533,7 +1533,7 @@ const DocumentDetailPage = () => {
 
 // Admin Layout
 const AdminLayout = ({ children }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -1594,15 +1594,19 @@ const AdminLayout = ({ children }) => {
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-6">
-          <div className="flex items-center gap-3 mb-4 text-white/80">
-            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-              {user?.username?.charAt(0).toUpperCase()}
-            </div>
+          <Link to="/admin/settings" className="flex items-center gap-3 mb-4 text-white/80 hover:text-white transition-colors">
+            {user?.profilePhoto ? (
+              <img src={user.profilePhoto} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                {user?.username?.charAt(0).toUpperCase()}
+              </div>
+            )}
             <div>
               <div className="font-medium text-white">{user?.fullName || user?.username}</div>
               <div className="text-xs text-white/60">Admin</div>
             </div>
-          </div>
+          </Link>
           <Button 
             variant="outline" 
             className="w-full border-white/20 text-white hover:bg-white/10"
