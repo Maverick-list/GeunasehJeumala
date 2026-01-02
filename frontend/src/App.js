@@ -2052,7 +2052,7 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
         <h1 className="text-2xl font-bold">{title}</h1>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="gradient-primary" onClick={() => { setFormData({}); setEditingId(null); }}>
+            <Button className="gradient-primary" onClick={openAddDialog}>
               <Plus size={16} className="mr-2" /> Tambah
             </Button>
           </DialogTrigger>
