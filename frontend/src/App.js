@@ -1955,6 +1955,21 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
     "Content-Type": "application/json"
   };
 
+  // Initialize form with default values for select fields
+  const getDefaultFormData = () => {
+    const defaults = {};
+    fields.forEach(field => {
+      if (field.type === "select" && field.options?.length > 0) {
+        defaults[field.name] = field.options[0].value;
+      } else if (field.type === "tags") {
+        defaults[field.name] = [];
+      } else {
+        defaults[field.name] = "";
+      }
+    });
+    return defaults;
+  };
+
   useEffect(() => {
     fetchItems();
   }, []);
@@ -1962,9 +1977,9 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
   const fetchItems = async () => {
     try {
       const res = await axios.get(`${API}/${endpoint}`);
-      setItems(res.data || []);
+      setItems(Array.isArray(res.data) ? res.data : []);
     } catch (e) {
-      console.error(e);
+      console.error("Fetch error:", e);
       setItems([]);
     }
   };
@@ -1972,27 +1987,42 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
+    // Prepare data - ensure all required fields have values
+    const submitData = { ...formData };
+    fields.forEach(field => {
+      if (field.type === "select" && !submitData[field.name] && field.options?.length > 0) {
+        submitData[field.name] = field.options[0].value;
+      }
+    });
+    
     try {
       if (editingId) {
-        await axios.put(`${API}/${endpoint}/${editingId}`, formData, { headers });
-        toast?.addToast("Data berhasil diupdate!", "success");
+        const res = await axios.put(`${API}/${endpoint}/${editingId}`, submitData, { headers });
+        if (res.data) {
+          toast?.addToast("Data berhasil diupdate!", "success");
+        }
       } else {
-        await axios.post(`${API}/${endpoint}`, formData, { headers });
-        toast?.addToast("Data berhasil ditambahkan!", "success");
+        const res = await axios.post(`${API}/${endpoint}`, submitData, { headers });
+        if (res.data) {
+          toast?.addToast("Data berhasil ditambahkan!", "success");
+        }
       }
       await fetchItems();
       setDialogOpen(false);
-      setFormData({});
+      setFormData(getDefaultFormData());
       setEditingId(null);
     } catch (e) {
       console.error("Save error:", e.response?.data || e.message);
-      toast?.addToast(e.response?.data?.detail || "Gagal menyimpan data", "error");
+      const errorMsg = e.response?.data?.detail || "Gagal menyimpan data";
+      toast?.addToast(typeof errorMsg === 'string' ? errorMsg : "Gagal menyimpan data", "error");
     }
     setLoading(false);
   };
 
   const handleEdit = (item) => {
-    setFormData({...item});
+    const editData = { ...getDefaultFormData(), ...item };
+    setFormData(editData);
     setEditingId(item.id);
     setDialogOpen(true);
   };
@@ -2005,8 +2035,15 @@ const AdminCRUD = ({ title, endpoint, fields, renderItem }) => {
       await fetchItems();
     } catch (e) {
       console.error("Delete error:", e.response?.data || e.message);
-      toast?.addToast(e.response?.data?.detail || "Gagal menghapus data", "error");
+      const errorMsg = e.response?.data?.detail || "Gagal menghapus data";
+      toast?.addToast(typeof errorMsg === 'string' ? errorMsg : "Gagal menghapus data", "error");
     }
+  };
+
+  const openAddDialog = () => {
+    setFormData(getDefaultFormData());
+    setEditingId(null);
+    setDialogOpen(true);
   };
 
   return (
