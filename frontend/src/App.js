@@ -30,7 +30,9 @@ const DEFAULT_LOGO = "https://customer-assets.emergentagent.com/job_13832b27-906
 const LOGO_URL = DEFAULT_LOGO;
 
 // Toast Context for notifications
-const ToastContext = createContext(null);
+// Ganti URL ini dengan URL backend asli Anda (domain/api)
+const BACKEND_URL = "https://api.geunasehjeumala.org"; 
+const API = `${BACKEND_URL}/api`;
 
 const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
